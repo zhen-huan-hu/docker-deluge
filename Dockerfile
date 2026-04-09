@@ -1,22 +1,26 @@
-FROM docker.io/alpine:edge
+# syntax=docker/dockerfile:1
+
+FROM alpine:3.23 AS final
 
 RUN set -ex && \
     apk update && \
-    apk add --no-cache --upgrade deluge
+    apk add --no-cache --upgrade \
+        bash \
+        deluge
 
-COPY ./entrypoint.sh /usr/local/bin
-COPY ./core.conf /defaults/core.conf
+COPY --chmod=755 ./entrypoint.sh /app/entrypoint.sh
 
-RUN set -ex && \
-    chmod 755 /usr/local/bin/entrypoint.sh && \
-    chmod 644 /defaults/core.conf
+COPY --chmod=644 ./core.conf /app/defaults/core.conf
 
-ENV DELUGE_USER=
-ENV DELUGE_PASSWORD=
-ENV DELUGE_UMASK=0022
-ENV TZ=America/Chicago
+ENV DELUGE_USER= \
+    DELUGE_PASSWORD= \
+    DELUGE_UMASK=0022 \
+    TZ=America/Chicago
 
 EXPOSE 58846 56881 56881/udp
-VOLUME /config /downloads
 
-ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+WORKDIR /config
+
+VOLUME /downloads
+
+CMD ["/bin/bash", "/app/entrypoint.sh"]
