@@ -10,7 +10,7 @@ fi
 
 if [ -n "${DELUGE_USER:-}" ] && [ -n "${DELUGE_PASSWORD:-}" ]; then
     if [ ! -s /config/auth ] || ! grep -Fxq "${DELUGE_USER}:${DELUGE_PASSWORD}:10" /config/auth; then
-        install -m 600 <(echo "${DELUGE_USER}:${DELUGE_PASSWORD}:10") /config/auth
+        echo "${DELUGE_USER}:${DELUGE_PASSWORD}:10" | install -m 600 /dev/stdin /config/auth
     else
         echo "Account already exists. Ignore environment variables DELUGE_USER and DELUGE_PASSWORD."
     fi

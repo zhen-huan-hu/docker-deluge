@@ -5,7 +5,6 @@ FROM alpine:3.23 AS final
 RUN set -ex && \
     apk update && \
     apk add --no-cache --upgrade \
-        bash \
         deluge
 
 WORKDIR /app
@@ -23,4 +22,4 @@ EXPOSE 58846 56881 56881/udp
 
 VOLUME /config /downloads
 
-ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
