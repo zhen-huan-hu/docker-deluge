@@ -8,9 +8,11 @@ RUN set -ex && \
         bash \
         deluge
 
-COPY --chmod=755 ./entrypoint.sh /app/entrypoint.sh
+WORKDIR /app
 
-COPY --chmod=644 ./core.conf /app/defaults/core.conf
+COPY --chmod=755 ./entrypoint.sh ./entrypoint.sh
+
+COPY --chmod=644 ./core.conf ./defaults/core.conf
 
 ENV DELUGE_USER= \
     DELUGE_PASSWORD= \
@@ -19,8 +21,6 @@ ENV DELUGE_USER= \
 
 EXPOSE 58846 56881 56881/udp
 
-WORKDIR /config
+VOLUME /config /downloads
 
-VOLUME /downloads
-
-CMD ["/bin/bash", "/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]
